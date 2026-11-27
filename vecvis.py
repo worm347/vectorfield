@@ -151,6 +151,7 @@ def change_color(event=None):
     global color, cmap
     color = color_buttons.value_selected
     cmap = color if color in plt.colormaps() else ListedColormap([color])
+    scat.set_cmap(cmap); lines.set_cmap(cmap)
 
 color_buttons.on_clicked(change_color)
 
@@ -284,8 +285,6 @@ def update(frame):
     axisclear_button.label.set_text('show axis' if axisclear else 'axis clear')
 
     # update trails and particles and their colors
-    scat.set_cmap(cmap)
-    lines.set_cmap(cmap)
     lines.set_segments(segments(part_position, streak))
     lines.set_array(speed)
     
