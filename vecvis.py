@@ -11,14 +11,15 @@ for key in plt.rcParams:
 
 #settings
 fun = lambda x, y, z: (np.sin(y) - 0.2*x, np.sin(z) - 0.2*y, np.sin(x) - 0.2*z) # vector field; look out for undefined points bc it'll mess with the colors (ie. sqrt of abs(n) instead of n)
+#fun = lambda x, y, z: (-1.4*x - 4*y - 4*z - y**2, -1.4*y - 4*z - 4*x - z**2, -1.4*z - 4*x - 4*y - x**2)
 
-dt = 0.2 # time step
+dt = 0.005 # time step
 
-lim = 6 # limit for plot axes
+lim = 8 # limit for plot axes
 dlim = lim # distance limit for repositioning particles
 speedlim = 0.1 # minimum speed for particles to be repositioned
 
-npart = 2500 # number of particles
+npart = 1000 # number of particles
 partsize = 2 # size of particles
 
 streak = 0.3 # length of streaks relative to speed
@@ -129,10 +130,10 @@ for text in (xcomp, ycomp, zcomp):
     
 ## sliders
 
-dt_slider = Slider(box, 'dt', 0, 0.5, valinit=dt)
+dt_slider = Slider(box, 'dt', 0, 0.3, valinit=dt)
 alpha_slider = Slider(box2, 'alpha', 0, 1, valinit=alpha)
-partsize_slider = Slider(box3, 'partsize', 0, 5, valinit=partsize)
-streak_slider = Slider(box4, 'streak', 0, 1, valinit=streak)
+partsize_slider = Slider(box3, 'partsize', 0, 10, valinit=partsize)
+streak_slider = Slider(box4, 'streak', 0, 0.5, valinit=streak)
 npart_slider = Slider(box5, 'npart', 1, 5000, valinit=npart, valstep=1)
 
 ## buttons
@@ -270,7 +271,7 @@ def update(frame):
     lines.set_alpha(alpha)
     lines.set_linewidth(partsize)
 
-    part_position += f(part_position) * dt
+    part_position += f(part_position) * dt ### the math
 
     d = mag(part_position)
     speed = mag(f(part_position))
@@ -298,7 +299,7 @@ def update(frame):
 ani = FuncAnimation(
     fig,
     update,
-    frames=100,
+    frames=144,
     interval=10,
 )
 
