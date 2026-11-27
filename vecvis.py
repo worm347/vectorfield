@@ -3,7 +3,10 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Line3DCollection
 from matplotlib.animation import FuncAnimation
 from matplotlib.colors import ListedColormap
-from matplotlib.widgets import Slider, Button, RadioButtons
+from matplotlib.widgets import Slider, Button, RadioButtons, TextBox
+for key in plt.rcParams:
+    if key.startswith('keymap.'):
+        plt.rcParams[key] = []
 
 
 #settings
@@ -100,9 +103,29 @@ box7 = fig.add_axes([x, 0.185, w, 0.025])
 box9 = fig.add_axes([x, 0.220, w, 0.050])
 box8 = fig.add_axes([x, 0.280, w, 0.200])
 hide_box = fig.add_axes([0.005, 0.005, 0.025, 0.015])
+funxbox = fig.add_axes([x, 0.600, w, 0.020])
+funybox = fig.add_axes([x, 0.550, w, 0.020])
+funzbox = fig.add_axes([x, 0.500, w, 0.020])
 for b in (box, box2, box3, box4, box5):
     b.set_axis_off()
     b.patch.set_alpha(0)
+    
+xcomp = TextBox(funxbox, 'x', 'sin(y) - 0.2*x')
+ycomp = TextBox(funybox, 'y', 'sin(z) - 0.2*y')
+zcomp = TextBox(funzbox, 'z', 'sin(x) - 0.2*z')
+
+def subtext(event=None):
+    global fun
+    try:
+        instr = "lambda x, y, z: (" + xcomp.text + ", " + ycomp.text +", "+zcomp.text+")"
+        new_fun = eval(instr.replace('^', '**'),{**vars(np)})
+        new_fun(1.0, 1.0, 1.0) # test it once so bad names get caught here
+        fun = new_fun
+    except (SyntaxError, NameError, TypeError):
+        print("check your formatting (x,y,z components)")
+
+for text in (xcomp, ycomp, zcomp):
+    text.on_submit(subtext)
     
 ## sliders
 
@@ -145,11 +168,14 @@ def refresh(event=None):
     global scat, lines, part_position
     lines.remove()
     scat.remove()
+    
 
     npart = npart_slider.val
     part_position = np.random.normal(loc = 0, scale = lim/3, size = (npart, 3))
 
     speed = mag(f(part_position))
+    vmax = np.percentile(speed, 95) 
+    vmin = np.percentile(speed, 0)
 
     lines = Line3DCollection(segments(part_position, streak_slider.val), cmap=cmap, linewidth=partsize_slider.val, alpha=alpha_slider.val)
     lines.set_array(speed)
@@ -164,8 +190,8 @@ refreshButton.on_clicked(refresh)
 hidden = False
 hide_button = Button(hide_box, 'hide')
 hide_button.label.set_fontsize(8)
-control_boxes = [box, box2, box3, box4, box5, box6, box7, box8, box9]
-control_widgets = [dt_slider, alpha_slider, partsize_slider, streak_slider, npart_slider, refreshButton, axisclear_button, color_buttons, bgcolor_buttons]
+control_boxes = [box, box2, box3, box4, box5, box6, box7, box8, box9, funxbox, funybox, funzbox]
+control_widgets = [dt_slider, alpha_slider, partsize_slider, streak_slider, npart_slider, refreshButton, axisclear_button, color_buttons, bgcolor_buttons, xcomp, ycomp, zcomp]
 
 def toggle_hide(event=None):
     global hidden
@@ -202,11 +228,21 @@ def style_widgets():
         radio._buttons.set_facecolor(['none' if i != radio.index_selected else bw(test) for i in range(len(radio.labels))])
 
     for button in (axisclear_button, refreshButton, hide_button):
-        button.color = 'none'  # no fill
-        button.hovercolor = 'none'
+        button.color = (0, 0, 0, 0)  # no fill (transparent)
+        button.hovercolor = (0, 0, 0, 0)
         button.ax.set_facecolor('none')
         button.label.set_color(bw(test))
         for spine in button.ax.spines.values():
+            spine.set_edgecolor(bw(test))  # border only
+
+    for tb in (xcomp, ycomp, zcomp):
+        tb.color = (0, 0, 0, 0)  # no fill (transparent)
+        tb.hovercolor = (0, 0, 0, 0)
+        tb.ax.set_facecolor('none')
+        tb.label.set_color(bw(test))
+        tb.text_disp.set_color(bw(test))
+        tb.cursor.set_color(bw(test))
+        for spine in tb.ax.spines.values():
             spine.set_edgecolor(bw(test))  # border only
 
 style_widgets()
