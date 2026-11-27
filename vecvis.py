@@ -11,7 +11,7 @@ fun = lambda x, y, z: (np.sin(y) - 0.2*x, np.sin(z) - 0.2*y, np.sin(x) - 0.2*z) 
 
 dt = 0.2 # time step
 
-lim = 5 # limit for plot axes
+lim = 6 # limit for plot axes
 dlim = lim # distance limit for repositioning particles
 speedlim = 0.1 # minimum speed for particles to be repositioned
 
