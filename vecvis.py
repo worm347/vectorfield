@@ -129,7 +129,7 @@ for text in (xcomp, ycomp, zcomp):
     
 ## sliders
 
-dt_slider = Slider(box, 'dt', 0, 2, valinit=dt)
+dt_slider = Slider(box, 'dt', 0, 0.5, valinit=dt)
 alpha_slider = Slider(box2, 'alpha', 0, 1, valinit=alpha)
 partsize_slider = Slider(box3, 'partsize', 0, 5, valinit=partsize)
 streak_slider = Slider(box4, 'streak', 0, 1, valinit=streak)
