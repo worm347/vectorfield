@@ -221,31 +221,31 @@ def style_widgets():
         slider.valtext.set_color(bw(test))
 
     for radio in (color_buttons, bgcolor_buttons):
-        radio.ax.set_facecolor('none')  # no white rectangle
+        radio.ax.set_facecolor('none')  
         for spine in radio.ax.spines.values():
-            spine.set_visible(False)  # no border
+            spine.set_visible(False)  
         radio.set_label_props({'color': [bw(test)] * len(radio.labels)})
-        radio.set_radio_props({'edgecolor': bw(test)})  # circle outlines
-        radio.activecolor = bw(test)  # color of the filled dot when you click one
+        radio.set_radio_props({'edgecolor': bw(test)})  
+        radio.activecolor = bw(test)  
         radio._buttons.set_facecolor(['none' if i != radio.index_selected else bw(test) for i in range(len(radio.labels))])
 
     for button in (axisclear_button, refreshButton, hide_button):
-        button.color = (0, 0, 0, 0)  # no fill (transparent)
+        button.color = (0, 0, 0, 0)  
         button.hovercolor = (0, 0, 0, 0)
         button.ax.set_facecolor('none')
         button.label.set_color(bw(test))
         for spine in button.ax.spines.values():
-            spine.set_edgecolor(bw(test))  # border only
+            spine.set_edgecolor(bw(test))  
 
     for tb in (xcomp, ycomp, zcomp):
-        tb.color = (0, 0, 0, 0)  # no fill (transparent)
+        tb.color = (0, 0, 0, 0)  
         tb.hovercolor = (0, 0, 0, 0)
         tb.ax.set_facecolor('none')
         tb.label.set_color(bw(test))
         tb.text_disp.set_color(bw(test))
         tb.cursor.set_color(bw(test))
         for spine in tb.ax.spines.values():
-            spine.set_edgecolor(bw(test))  # border only
+            spine.set_edgecolor(bw(test))  
 
 style_widgets()
 
